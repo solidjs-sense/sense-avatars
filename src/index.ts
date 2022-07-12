@@ -14,10 +14,12 @@ const dSize = 36;
 const pSize = 6;
 
 export const generatorAvator = ({ name, bg, fg, size }: { name: string; bg?: string; fg?: string; size?: number }) => {
-  const res = md5(name)
+  const hash = md5(name)
     .split('')
     .filter((c) => c !== '+' && c !== '/')
     .slice(0, dataLen);
+
+  // canvas
   const canvas = document.createElement('canvas');
   canvas.width = dSize;
   canvas.height = dSize;
@@ -32,11 +34,10 @@ export const generatorAvator = ({ name, bg, fg, size }: { name: string; bg?: str
   ctx.fillRect(0, 0, dSize, dSize);
 
   // fg
-  const avg = res.reduce((sum, c) => sum + parseInt(c, 16), 0) / res.length;
+  const avg = hash.reduce((sum, c) => sum + parseInt(c, 16), 0) / hash.length;
   ctx.fillStyle = fg || '#000';
-  for (let i = 0; i < res.length; i++) {
-    const c = res[i];
-    if (parseInt(c, 16) > avg) {
+  for (let i = 0; i < hash.length; i++) {
+    if (parseInt(hash[i], 16) > avg) {
       const x = (i % 2) + 1;
       const y = Math.floor(i / 2) + 1;
       // left side
